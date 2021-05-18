@@ -1,0 +1,157 @@
+body{
+	margin:0;
+	padding:0;
+	height:100vh;
+	width:100vw;
+	
+	display:flex;
+	align-items:center;
+	justify-content:space-around;
+	flex-direction:column;
+	
+	background-color:#000;
+}
+
+#canvas{
+	top:10%;
+	
+	height:15em;
+	width:15em;
+	
+	border-radius:100%;
+	
+	box-shadow:0em 0em 1em .25em rgba(0,0,0,.5) inset;
+	background-color:rgba(255,255,255,.95);
+}
+
+#button-holder{
+	user-select:none;
+	display:flex;
+	justify-content:center;
+	align-items:center;
+
+	/* This holds the outer rim, the dark hole for the button, and the inner circle*/
+	background: radial-gradient(rgba(128, 128, 128, 0.65) 60%, rgb(81, 81, 81) 63%, rgb(177, 177, 177) 20%) rgb(255,0,0);
+	width:12em;
+	height:12em;
+	border-radius:100%;
+	box-shadow:0.1em 0.1em 0.2em 0.03em rgba(0,0,0,.5);
+}
+
+#button{
+	background: rgb(255,0,0) linear-gradient(rgba(0,0,0,0), rgba(0,0,0,.4));
+	z-index:2;
+	border-radius:100%;
+	width:90%;
+	height:90%;
+	/* position: relative; */
+	margin:auto;
+	transform:rotate3d(0,0,0,0deg) translate(0px,0px) scale(1);
+	transform-origin:50% 50% -100px;
+	transition:transform .02s, box-shadow .02s;
+	box-shadow:0 0 10em rgba(0,0,0,0) inset, 0.1em 0.1em 0.2em 0.15em rgba(0,0,0,.5);
+}
+
+#column{
+	background: rgb(0,0,0) linear-gradient(rgba(0,0,0,0), rgba(0,0,0,0) 50%, rgba(0,0,0,.4), rgba(0,0,0,.4) 55%, rgba(0,0,0,.7) 100%);
+	z-index:1;
+	border-left: .1em solid rgba(0,0,0,.5);
+	border-right: .1em solid rgba(0,0,0,.5);
+	width: 4em;
+	height: 4em;
+	position: absolute;
+	pointer-events: none;
+}
+
+#menu-button{
+	font-size:1.5em;
+}
+
+#measure{
+	color:#fff;
+	font-size:3em;
+	text-align:center;
+}
+
+/*********************/
+/******* MENU ********/
+/*********************/
+
+/* Overall positioning */
+#menu-container{
+	width:100%;
+	height:100%;
+	position:fixed;
+	z-index:100;
+	
+	display:flex;
+	align-items:center;
+	justify-content:center;
+	
+	pointer-events:none;
+}
+
+#menu{
+	max-height:100%;
+	
+	width:100%;
+	max-width:20em;
+	overflow:auto;
+	box-sizing:border-box;
+	padding:1em 0;
+	
+	text-align:center;
+	
+	background-color:#fff;
+	border:1px solid black;
+	
+	pointer-events:auto;
+}
+
+/* Color adjustment */
+#r,#g,#b{
+	-webkit-appearance:none;
+	appearance: none;
+	width:100%;
+	height:25px;
+	background:#d3d3d3;
+	outline:none;
+	opacity:0.7;
+	
+	display:block;
+	margin:auto;
+}
+
+#r{
+	background:#dcc;
+}
+
+#g{
+	background:#cdc;
+}
+
+#b{
+	background:#ccd;
+}
+
+#r::-webkit-slider-thumb
+,#g::-webkit-slider-thumb
+,#b::-webkit-slider-thumb{
+	-webkit-appearance:none;
+	appearance:none;
+	width:25px;
+	height:25px;
+	cursor:pointer;
+}
+
+#r::-webkit-slider-thumb{
+	background:#f00;
+}
+
+#g::-webkit-slider-thumb{
+	background:#0f0;
+}
+
+#b::-webkit-slider-thumb{
+	background:#00f;
+}
