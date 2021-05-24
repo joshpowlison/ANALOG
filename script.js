@@ -18,14 +18,6 @@ const B					= document.getElementById('b');
 const X					= 0;
 const Y					= 1;
 
-const BUTTONDOWN		= document.createElement('audio');
-BUTTONDOWN.preload		= true;
-BUTTONDOWN.src			= 'assets/button-down.mp3';
-BUTTONDOWN.volume		= 0.4;
-const BUTTONUP			= document.createElement('audio');
-BUTTONUP.preload		= true;
-BUTTONUP.src			= 'assets/button-up.mp3';
-
 const CANVAS			= document.getElementById('canvas');
 const CTX				= CANVAS.getContext('2d');
 
