@@ -1,6 +1,6 @@
 <?php
 
-// This file runs when debug mode is on and we're in localhost
+// This file runs when we're in localhost
 if($_SERVER['REMOTE_ADDR'] == '::1'){
 
 	exec('clang --target=wasm32 -Os -flto -nostdlib -std=c99 -Wl,--no-entry -Wl,--export-all -fno-builtin -o script.wasm script.c 2>&1',$message);
@@ -44,7 +44,7 @@ if($_SERVER['REMOTE_ADDR'] == '::1'){
 			<p>Creator: Josh Powlison</p>
 			<p>Co-Producers: None yet!</p>
 			
-			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/button-a-game-about-pressing-issues">Funded with Kickstarter</a></p>
+			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself">Funded with Kickstarter</a></p>
 			<p><a target="_blank" href="https://joshpowlison.com/">My Website</a></p>
 			
 			<p><em>V 1.0.0 i guess</em></p>
