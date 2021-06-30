@@ -1,26 +1,17 @@
 TO DO:
-	- Add analog stick support
 	- Make dots and such actually draw a line
 	- Make player and target dots have depth, so they layer over each other
-	- 
+	- Record developer commentary
 
 NEXT STEPS:
 	- Make draw lines
 	- Make lines cross each other
-	- When the player starts, set it up so that we can confirm they have a joystick-supporting gamepad connected and set the deadzone when they press A (or another button)
-	- Make analog stick flick back if using touch or mouse?
-	- Make Git repo public (if it isn't already)
-	- Put up on website page
 
+- Switch between mouse and gamepad (click mouse or press gamepad button to swap)
 
-- Problems I'm trying to solve:
-	- Read analog stick input from a gamepad
-	- Split input position data off from mouse (so that we could use gamepad)
-
-
-
-
-
+POST ABOUT: made analog stick work with analog stick
+- Put up on website page
+It's on GitHub: https://github.com/joshpowlison/ANALOG
 
 
 

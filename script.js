@@ -157,87 +157,43 @@ function onAnimationFrame(frameTimestamp){
 			analogCenter[Y] + (gamepadPosition[Y] * analogReadDistance)
 		];
 
-	console.log(analogStickPosition);
-
 	// Read cursor position, if it's set
 	if(analogStickPosition != null)
 		distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
 	
-	// If the button is being targeted at all by the movement, angle it
-	if(gamepadPosition !== null || distanceFromAnalogCenter <= analogReadDistance){
-		var pressMove			= 5;
+	// I WANT THIS IN JS
+	var distance = Math.sqrt(a*a + b*b);  // TODO: get square root or fake it!
 	
-		// Set button rotation angle
-		// rotate3d(rotate left, rotate up, LEAVE 0, strongest amount)
-		var xAngle = (analogStickPosition[X] - analogCenter[X]) / analogRadius;
-		var yAngle = (analogStickPosition[Y] - analogCenter[Y]) / analogRadius * -1;
-		
-		// Distance
-		var a = analogStickPosition[X] - analogCenter[X];
-		var b = analogStickPosition[Y] - analogCenter[Y];
-		var distance = Math.sqrt(a*a + b*b);
-		
-		buttonTransform = 'rotate3d(' + yAngle + ',' + xAngle + ',0,' + (distance * .7) + 'deg)';
-
-		// Ripped from: https://stackoverflow.com/questions/15653801/rotating-object-to-face-mouse-pointer-on-mousemove
-		var columnAngle = Math.atan2(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
-		
-		columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / analogRadius * .7) + ') translate(0%, ' + (distanceFromAnalogCenter / analogRadius * 85) + '%)';
-		
-		// Update info
-		distanceFromTarget = getDistance(analogStickPosition[X] - target[X], analogStickPosition[Y] - target[Y]);
-	} else {
+	buttonTransform = 'rotate3d(' + yAngle + ',' + xAngle + ',0,' + (distance * .7) + 'deg)';
+	
+	// Ripped from: https://stackoverflow.com/questions/15653801/rotating-object-to-face-mouse-pointer-on-mousemove
+	var columnAngle = Math.atan2(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
+	
+	columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / analogRadius * .7) + ') translate(0%, ' + (distanceFromAnalogCenter / analogRadius * 85) + '%)';
+	
+	// If we are not doing anything with the ANALOG stick, then move it to base position
+	/*
+	else
+	{
 		buttonTransform = 'rotate3d(0,0,0,0deg) translate(0px,0px) scale(1)';
 		columnTransform = 'rotate(0deg) scale(1,1) translate(0%,0%)';
 	}
+	*/
 	
 	// Update styles
 	BUTTON.style.transform = buttonTransform;
 	COLUMN.style.transform = columnTransform;
 	
-	// Move target before updating info- then it's IMPOSSIBLE to be perfect
-	var moveRelative = [0,0];
-	moveRelative[X] = targetTarget[X] - target[X];
-	moveRelative[Y] = targetTarget[Y] - target[Y];
-	
-	if(Math.abs(moveRelative[X]) > 3)
-		moveRelative[X] *= 0.5 * sDeltaTime;
-	
-	if(Math.abs(moveRelative[Y]) > 3)
-		moveRelative[Y] *= 0.5 * sDeltaTime;
-	
-	target[X] += moveRelative[X];
-	target[Y] += moveRelative[Y];
-	
 	// Update targetTarget if it's moved too close
 	while(getDistance(target[X] - targetTarget[X], target[Y] - targetTarget[Y]) < 3){
-	//	// https://stackoverflow.com/questions/12959237/get-point-coordinates-based-on-direction-and-distance-vector
+	// https://stackoverflow.com/questions/12959237/get-point-coordinates-based-on-direction-and-distance-vector
 		var positionOut = Math.random() * analogReadDistance;
 		var angle = Math.random() * 360;
 		targetTarget[X] = analogCenter[X] + Math.cos(angle) * positionOut;
 		targetTarget[Y] = analogCenter[Y] + Math.sin(angle) * positionOut;
 	}
 	
-	
-	// Update points
-	lastPointDelay -= sDeltaTime;
-	if(lastPointDelay <= 0){
-		lastPointDelay += pointDelay;
-		
-		// Line Points
-		eTargetPositionsX[currentPoint] = target[X] - analogCenter[X] + (CANVAS.width / 2)
-		eTargetPositionsY[currentPoint] = target[Y] - analogCenter[Y] + (CANVAS.height / 2)
-		
-		// Player Points
-		if(analogStickPosition != null){
-			ePlayerPositionsX[currentPoint] = analogStickPosition[X] - analogCenter[X] + (CANVAS.width / 2)
-			ePlayerPositionsY[currentPoint] = analogStickPosition[Y] - analogCenter[Y] + (CANVAS.height / 2)
-		}
-		
-		currentPoint ++;
-		if(currentPoint >= maxPoints)
-			currentPoint = 0;
-	}
+	WASM.loop(sDeltaTime);
 	
 	//////////////
 	//// DRAW ////
@@ -437,9 +393,6 @@ var ePlayerPositionsY = null;
 var eTargetPositionsX = null;
 var eTargetPositionsY = null;
 var maxPoints = 1024;
-var pointDelay = 60 / maxPoints;
-var currentPoint = 0;
-var lastPointDelay = 0;
 
 //obj.instance.exports.loop((frameTimestamp - lastFrameTimestamp) / 1000);
 
