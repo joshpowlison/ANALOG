@@ -117,39 +117,75 @@ function move(event){
 	}
 }
 
+var gamepadDefaultPosition = [0,0];
+
+function getGamepadAxes(){
+	var deadzone = 0;
+	var maxDistance = 0.95;
+	var gamepad = navigator.getGamepads()[0]; // TODO: track a specific gamepad
+	
+	if(gamepad == null)
+		return null;
+	
+	return [gamepad.axes[0], gamepad.axes[1]];
+}
+
+function SetRange(value, min, max){
+	if(value < min)
+		return min;
+	
+	if(value > max)
+		return max;
+	
+	return value;
+}
+
 var lastFrameTimestamp	= 0;
 function onAnimationFrame(frameTimestamp){
 	var sDeltaTime = (frameTimestamp - lastFrameTimestamp) / 1000;
 
 	var distanceFromAnalogCenter = analogReadDistance + 1;
 	var distanceFromTarget = distanceFromAnalogCenter;
+	
+	var analogStickPosition = null;
+	var gamepadPosition = getGamepadAxes();
+	if(gamepadPosition == null)
+		analogStickPosition = pressPosition;
+	else
+		analogStickPosition = [
+			analogCenter[X] + (gamepadPosition[X] * analogReadDistance),
+			analogCenter[Y] + (gamepadPosition[Y] * analogReadDistance)
+		];
+
+	console.log(analogStickPosition);
+
 	// Read cursor position, if it's set
-	if(pressPosition != null)
-		distanceFromAnalogCenter = getDistance(pressPosition[X] - analogCenter[X], pressPosition[Y] - analogCenter[Y]);
+	if(analogStickPosition != null)
+		distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
 	
 	// If the button is being targeted at all by the movement, angle it
-	if(distanceFromAnalogCenter <= analogReadDistance){
+	if(gamepadPosition !== null || distanceFromAnalogCenter <= analogReadDistance){
 		var pressMove			= 5;
 	
 		// Set button rotation angle
 		// rotate3d(rotate left, rotate up, LEAVE 0, strongest amount)
-		var xAngle = (pressPosition[X] - analogCenter[X]) / analogRadius;
-		var yAngle = (pressPosition[Y] - analogCenter[Y]) / analogRadius * -1;
+		var xAngle = (analogStickPosition[X] - analogCenter[X]) / analogRadius;
+		var yAngle = (analogStickPosition[Y] - analogCenter[Y]) / analogRadius * -1;
 		
 		// Distance
-		var a = pressPosition[X] - analogCenter[X];
-		var b = pressPosition[Y] - analogCenter[Y];
+		var a = analogStickPosition[X] - analogCenter[X];
+		var b = analogStickPosition[Y] - analogCenter[Y];
 		var distance = Math.sqrt(a*a + b*b);
 		
 		buttonTransform = 'rotate3d(' + yAngle + ',' + xAngle + ',0,' + (distance * .7) + 'deg)';
 
 		// Ripped from: https://stackoverflow.com/questions/15653801/rotating-object-to-face-mouse-pointer-on-mousemove
-		var columnAngle = Math.atan2(pressPosition[X] - analogCenter[X], pressPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
+		var columnAngle = Math.atan2(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
 		
 		columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / analogRadius * .7) + ') translate(0%, ' + (distanceFromAnalogCenter / analogRadius * 85) + '%)';
 		
 		// Update info
-		distanceFromTarget = getDistance(pressPosition[X] - target[X], pressPosition[Y] - target[Y]);
+		distanceFromTarget = getDistance(analogStickPosition[X] - target[X], analogStickPosition[Y] - target[Y]);
 	} else {
 		buttonTransform = 'rotate3d(0,0,0,0deg) translate(0px,0px) scale(1)';
 		columnTransform = 'rotate(0deg) scale(1,1) translate(0%,0%)';
@@ -193,9 +229,9 @@ function onAnimationFrame(frameTimestamp){
 		eTargetPositionsY[currentPoint] = target[Y] - analogCenter[Y] + (CANVAS.height / 2)
 		
 		// Player Points
-		if(pressPosition != null){
-			ePlayerPositionsX[currentPoint] = pressPosition[X] - analogCenter[X] + (CANVAS.width / 2)
-			ePlayerPositionsY[currentPoint] = pressPosition[Y] - analogCenter[Y] + (CANVAS.height / 2)
+		if(analogStickPosition != null){
+			ePlayerPositionsX[currentPoint] = analogStickPosition[X] - analogCenter[X] + (CANVAS.width / 2)
+			ePlayerPositionsY[currentPoint] = analogStickPosition[Y] - analogCenter[Y] + (CANVAS.height / 2)
 		}
 		
 		currentPoint ++;
@@ -256,14 +292,14 @@ function onAnimationFrame(frameTimestamp){
 		}
 	}
 	
-	if(pressPosition != null)
+	if(analogStickPosition != null)
 	{
 		CTX.fillStyle = 'green';
 		// Draw the target and current player position on the canvas
 		CTX.beginPath();
 		CTX.arc(
-			pressPosition[X] - analogCenter[X] + (CANVAS.width / 2)
-			,pressPosition[Y] - analogCenter[Y] + (CANVAS.height / 2)
+			analogStickPosition[X] - analogCenter[X] + (CANVAS.width / 2)
+			,analogStickPosition[Y] - analogCenter[Y] + (CANVAS.height / 2)
 			,CANVAS.width / 25
 			,0
 			,2 * Math.PI
@@ -294,6 +330,7 @@ function onAnimationFrame(frameTimestamp){
 
 // Check for gamepad input
 var gamepadInput = false;
+
 setInterval(function(){
 	// Get the first gamepad, if gamepads are connected
 	var gamepads = navigator.getGamepads();
@@ -306,6 +343,8 @@ setInterval(function(){
 			gamepadInput = false;
 			//unpress({gamepad:true});
 		}
+		
+		
 	}
 },16);
 

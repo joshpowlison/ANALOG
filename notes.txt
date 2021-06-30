@@ -1,0 +1,84 @@
+TO DO:
+	- Add analog stick support
+	- Make dots and such actually draw a line
+	- Make player and target dots have depth, so they layer over each other
+	- 
+
+NEXT STEPS:
+	- Make draw lines
+	- Make lines cross each other
+	- When the player starts, set it up so that we can confirm they have a joystick-supporting gamepad connected and set the deadzone when they press A (or another button)
+	- Make analog stick flick back if using touch or mouse?
+	- Make Git repo public (if it isn't already)
+	- Put up on website page
+
+
+- Problems I'm trying to solve:
+	- Read analog stick input from a gamepad
+	- Split input position data off from mouse (so that we could use gamepad)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+IDEAS:
+	SupremeCookie
+		- Scoring with images (like theme part, rubber ducky, etc)
+		- Rotate window when imperfect
+		- Screen shake
+		- Move the analog stick on-screen
+	Brandon
+		- Make outside of dot solid, but inside fades out?\
+	Stefon
+		- Colorblind mode(?)
+		- Playing with different hand modes
+		- Text on different scores
+
+	
+
+////////////
+////////////
+////////////
+
+// ANALOG Tasks //
+
+By June 30th:
+X	- Start streaming development
+X	- Make the analog stick color adjustable
+X	- Remove the paywall
+	- Pay a pro artist $100 USD to create the ANALOG stick graphics (deadline for art July 17th 12 PM EST)
+
+By mid-July:
+	- Create ANALOG stick stickers (2 stickers, one for the top and one for the bottom)
+	- Get at least 11 envelopes
+	- Record developer commentary and add it in to the game
+	- Make the game public on GitHub
+	- Record developer interviews
+	- Create an epic poem and read it on-stream
+	- Record a video where I shout out every producer
+
+By August 31:
+	- Ship backer rewards
+		- Write hand-lettered ANALOG haikus for high-level backers (wait for them to submit surveys so that I can use their favorite color for the ink)
+		- Ship stickers
+
+** Finish game by September 30th **
