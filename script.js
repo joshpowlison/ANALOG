@@ -175,16 +175,17 @@ function onAnimationFrame(frameTimestamp){
 			analogCenter[Y] + (gamepadPosition[Y] * settings[SETTING_ANALOG_READ_DISTANCE])
 		];
 
+	distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
+	
 	// Read cursor position, if it's set
-	if(analogStickPosition != null){
-		distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
+	if(analogStickPosition != null && distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE]){
 	
 		WASM.loop(sDeltaTime, analogStickPosition[X], analogStickPosition[Y], distanceFromAnalogCenter);
 		
 		// I WANT THIS IN JS
 		//var distance = Math.sqrt(a * a + b * b);  // TODO: get square root or fake it!
 		
-		buttonTransform = 'rotate3d(' + settings[SETTING_X_ANGLE] + ',' + settings[SETTING_Y_ANGLE] + ',0,' + (settings[SETTING_DISTANCE] * .7) + 'deg)';
+		buttonTransform = 'rotate3d(' + settings[SETTING_Y_ANGLE] + ',' + settings[SETTING_X_ANGLE] + ',0,' + (settings[SETTING_DISTANCE] * .7) + 'deg)';
 		
 		//console.log(settings[SETTING_A], settings[SETTING_B],  analogStickPosition, analogCenter);
 		//console.log(settings);
