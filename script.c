@@ -1,11 +1,35 @@
+#include "utility.c"
+
+///////////////////////
+////// CONSTANTS //////
+///////////////////////
+
+const int X = 0;
+const int Y = 1;
+const int maxPoints = 1024;
+
+const int SETTING_ANALOG_READ_DISTANCE	= 0;
+const int SETTING_ANALOG_RADIUS			= 1;
+const int SETTING_X_ANGLE				= 2;
+const int SETTING_Y_ANGLE				= 3;
+const int SETTING_DISTANCE_FROM_TARGET	= 4;
+const int SETTING_DISTANCE				= 5;
+const int SETTING_A						= 6;
+const int SETTING_B						= 7;
+
+///////////////////////
+////// VARIABLES //////
+///////////////////////
+
 float ePlayerPositionsX[1024];
 float ePlayerPositionsY[1024];
 float eTargetPositionsX[1024];
 float eTargetPositionsY[1024];
 
-const int X = 0;
-const int Y = 1;
-const int maxPoints = 1024;
+float target[2];
+float targetTarget[2];
+
+float settings[20];
 
 float CANVAS_WIDTH = 100;
 float CANVAS_HEIGHT = 100;
@@ -14,74 +38,61 @@ float lastPointDelay = 0;
 float pointDelay = 60.0f / (float)maxPoints;
 int currentPoint = 0;
 
-float getAbsFloat(float num){
-	if(num < 0)
-		num *= -1;
+float analogCenter[2];
 
-	return num;
-}
+///////////////////////
+////// LIBRARIES //////
+///////////////////////
 
-float getSquareFloat(float num){
-	return num * num;
-}
-
-// Stolen from: https://ourcodeworld.com/articles/read/884/how-to-get-the-square-root-of-a-number-without-using-the-sqrt-function-in-c
-float getSquareRoot(float number)
+void loop(float sDeltaTime, float analogStickPositionX, float analogStickPositionY, float distanceFromAnalogCenter)
 {
-    // store the half of the given number e.g from 256 => 128
-    float sqrt = number / 2;
-    float temp = 0;
-
-    // Iterate until sqrt is different of temp, that is updated on the loop
-    while(sqrt != temp){
-        // initially 0, is updated with the initial value of 128
-        // (on second iteration = 65)
-        // and so on
-        temp = sqrt;
-
-        // Then, replace values (256 / 128 + 128 ) / 2 = 65
-        // (on second iteration 34.46923076923077)
-        // and so on
-        sqrt = ( number/temp + temp) / 2;
-    }
-
-	return sqrt;
-}
-
-float getDistance(a,b){
-	return getSquareRoot(getSquareFloat(a) + getSquareFloat(b));
-}
-
-
-void loop(float sDeltaTime)
-{
-	float analogReadDistance = 25; // TODO: make tie in with JS
+	float analogStickPosition[2] = {analogStickPositionX, analogStickPositionY};
+	
+	rng();
 	
 	int gamepadExists = 0;
-	float distanceFromAnalogCenter = analogReadDistance + 1;
+	//float distanceFromAnalogCenter = settings[SETTING_ANALOG_READ_DISTANCE] + 1;
 	float distanceFromTarget = distanceFromAnalogCenter;
 	
-	float analogStickPosition[2];
-	float analogCenter[2];
-	float analogRadius;
-	
-	float targetTarget[2];
-	float target[2];
-	
 	// If the button is being targeted at all by the movement, angle it
-	if(gamepadExists == 1 || distanceFromAnalogCenter <= analogReadDistance)
+	if(gamepadExists == 1 || distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE])
 	{
 		// Set button rotation angle
 		// rotate3d(rotate left, rotate up, LEAVE 0, strongest amount)
-		float xAngle = (analogStickPosition[X] - analogCenter[X]) / analogRadius;
-		float yAngle = (analogStickPosition[Y] - analogCenter[Y]) / analogRadius * -1;
+		float xAngle = (analogStickPosition[X] - analogCenter[X]) / settings[SETTING_ANALOG_RADIUS];
+		float yAngle = (analogStickPosition[Y] - analogCenter[Y]) / settings[SETTING_ANALOG_RADIUS] * -1;
 		
 		// Distance
 		float a = analogStickPosition[X] - analogCenter[X];
 		float b = analogStickPosition[Y] - analogCenter[Y];
 		
+		settings[SETTING_X_ANGLE] = xAngle;
+		settings[SETTING_Y_ANGLE] = yAngle;
+		
+		settings[SETTING_DISTANCE] = getSquareRoot(a * a + b * b);
+		
 		// Update info
 		distanceFromTarget = getDistance(analogStickPosition[X] - target[X], analogStickPosition[Y] - target[Y]);
+		
+		settings[SETTING_DISTANCE_FROM_TARGET] = distanceFromTarget;
+	}
+	
+	if(getDistance(target[X] - targetTarget[X], target[Y] - targetTarget[Y]) < 3){
+	// https://stackoverflow.com/questions/12959237/get-point-coordinates-based-on-direction-and-distance-vector
+		/*var positionOut = Math.random() * settings[SETTING_ANALOG_READ_DISTANCE];
+		var angle = Math.random() * 360;
+		targetTarget[X] = analogCenter[X] + Math.cos(angle) * positionOut;
+		targetTarget[Y] = analogCenter[Y] + Math.sin(angle) * positionOut;*/
+		
+		float positionOut = rng() * settings[SETTING_ANALOG_READ_DISTANCE];
+		float angle = rng() * 360.0f;
+		
+		float padding = settings[SETTING_ANALOG_READ_DISTANCE] * 0.8f;
+		
+		targetTarget[X] = (analogCenter[X] - padding) + (rng() * padding * 2.0f);
+		targetTarget[Y] = (analogCenter[Y] - padding) + (rng() * padding * 2.0f);
+		/*targetTarget[X] = analogCenter[X] + Math.cos(angle) * positionOut;
+		targetTarget[Y] = analogCenter[Y] + Math.sin(angle) * positionOut;*/
 	}
 	
 	// Move target before updating info- then it's IMPOSSIBLE to be perfect
@@ -89,10 +100,10 @@ void loop(float sDeltaTime)
 	moveRelative[X] = targetTarget[X] - target[X];
 	moveRelative[Y] = targetTarget[Y] - target[Y];
 	
-	if(getAbsFloat(moveRelative[X]) > 3)
+	if(getAbsFloat(moveRelative[X]) > 3.0f)
 		moveRelative[X] *= 0.5f * sDeltaTime;
 	
-	if(getAbsFloat(moveRelative[Y]) > 3)
+	if(getAbsFloat(moveRelative[Y]) > 3.0f)
 		moveRelative[Y] *= 0.5f * sDeltaTime;
 	
 	target[X] += moveRelative[X];

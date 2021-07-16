@@ -27,8 +27,9 @@ if($_SERVER['REMOTE_ADDR'] == '::1'){
 	<p id="measure">0</p>
 	
 	<div id="button-holder">
-		<div id="button"></div>
-		<div id="column"></div>
+		<div id="button"><div id="button-coloration"></div></div>
+		<div id="column"><div id="column-coloration"></div></div>
+		<div id="button-holder-coloration"></div>
 	</div>
 	
 	<button id="menu-button">Menu</button>
