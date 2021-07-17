@@ -224,7 +224,7 @@ function onAnimationFrame(frameTimestamp){
 	CTX.clearRect(0,0,CANVAS.width,CANVAS.height);
 	
 	// Line positions
-	CTX.fillStyle = 'red';
+	CTX.fillStyle = 'rgba(255,0,0.5)';
 	for(var e = 0; e < maxPoints; ++ e){
 		if(eTargetPositionsX[e] > 0)
 		{
@@ -242,6 +242,7 @@ function onAnimationFrame(frameTimestamp){
 	}
 	
 	// Draw the target and current player position on the canvas
+	CTX.fillStyle = 'red';
 	CTX.beginPath();
 	CTX.arc(
 		target[X] - analogCenter[X] + (CANVAS.width / 2)
@@ -253,10 +254,10 @@ function onAnimationFrame(frameTimestamp){
 	CTX.fill();
 	
 	// Player positions
+	CTX.fillStyle = 'rgba(0,128,0,.5)';
 	for(var e = 0; e < maxPoints; ++ e){
 		if(ePlayerPositionsX[e] > 0)
 		{
-			CTX.fillStyle = 'green';
 			// Draw the target and current player position on the canvas
 			CTX.beginPath();
 			CTX.arc(

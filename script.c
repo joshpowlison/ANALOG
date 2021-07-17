@@ -115,16 +115,12 @@ void loop(float sDeltaTime, float analogStickPositionX, float analogStickPositio
 		lastPointDelay += pointDelay;
 		
 		// Line Points
-		//eTargetPositionsX[currentPoint] = target[X] - analogCenter[X] + (CANVAS_WIDTH / 2);
-		//eTargetPositionsY[currentPoint] = target[Y] - analogCenter[Y] + (CANVAS_HEIGHT / 2);
 		eTargetPositionsX[currentPoint] = target[X];
 		eTargetPositionsY[currentPoint] = target[Y];
 		
 		// Player Points
-		//if(analogStickPosition != null){
-			ePlayerPositionsX[currentPoint] = analogStickPosition[X];
-			ePlayerPositionsY[currentPoint] = analogStickPosition[Y];
-		//}
+		ePlayerPositionsX[currentPoint] = analogStickPosition[X];
+		ePlayerPositionsY[currentPoint] = analogStickPosition[Y];
 		
 		currentPoint ++;
 		if(currentPoint >= maxPoints)
