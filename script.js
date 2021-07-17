@@ -28,6 +28,7 @@ const COMMENTARYVOLUME	= document.getElementById('commentary');
 const COMMENTARYEL		= document.createElement('audio');
 COMMENTARYEL.autoplay	= true;
 COMMENTARYEL.volume		= COMMENTARYVOLUME.value
+COMMENTARYEL.src		= 'assets/commentary.mp3';
 
 const SETTING_ANALOG_READ_DISTANCE	= 0;
 const SETTING_ANALOG_RADIUS			= 1;
@@ -43,9 +44,12 @@ const SETTING_B						= 7;
 ///////////////////////
 
 var analogCenter		= [0, 0];
+var pressPosition		= [0, 0];
 var target				= [0, 0];
 var targetTarget		= [0, 0];
 var settings			= null;
+var score				= 0;
+
 
 ///////////////////////
 ////// FUNCTIONS //////
@@ -59,14 +63,14 @@ function getCenter(){
 	CANVAS.width		= settings[SETTING_ANALOG_READ_DISTANCE] * 2;
 	CANVAS.height		= settings[SETTING_ANALOG_READ_DISTANCE] * 2;
 	
-	console.log(target, targetTarget);
 	analogCenter[X]		= buttonRect.left	+ settings[SETTING_ANALOG_RADIUS];
 	analogCenter[Y]		= buttonRect.top	+ settings[SETTING_ANALOG_RADIUS];
 	target[X]			= analogCenter[X];
 	target[Y]			= analogCenter[Y];
 	targetTarget[X]		= analogCenter[X];
 	targetTarget[Y]		= analogCenter[Y];
-	console.log(target, targetTarget);
+	
+	pressPosition = analogCenter;
 }
 
 // Yes, I did shamelessly take code from StackOverflow, don't @ me I'm bad at maths: https://stackoverflow.com/a/9939071/5006449
@@ -101,18 +105,13 @@ function getDistance(a,b){
 	return Math.sqrt(a*a + b*b);
 }
 
-var buttonTransform = 'rotate3d(0,0,0,0deg) translate(0px,0px) scale(1)';
-var columnTransform = 'rotate(0deg) scale(1,1) translate(0%,0%)';
-var distanceFromTarget = 0;
-var pressPosition = [0,0];
-
 // On moving a pointer
 function move(event){
 	// Don't register this if the menu's open
 	if(document.getElementById('menu').style.display === 'block') return;
 	
 	// Get the position of pressing
-	pressPosition = null;
+	pressPosition = [0,0];
 	
 	// Need to add support for multiple touches tho?
 	if(event.touches){
@@ -133,6 +132,13 @@ function move(event){
 	else{
 		pressPosition = [event.clientX, event.clientY];
 	}
+	
+	// Set pressPosition to the center if we're far off it (the center)
+	var distanceFromAnalogCenter = getDistance(pressPosition[X] - analogCenter[X], pressPosition[Y] - analogCenter[Y]);
+	
+	// Read cursor position, if it's set
+	if(settings == null || distanceFromAnalogCenter > settings[SETTING_ANALOG_READ_DISTANCE])
+		pressPosition = analogCenter;
 }
 
 var gamepadDefaultPosition = [0,0];
@@ -177,6 +183,8 @@ function onAnimationFrame(frameTimestamp){
 
 	distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
 	
+	var buttonTransform, columnTransform;
+	
 	// Read cursor position, if it's set
 	if(gamepadPosition != null || (analogStickPosition != null && distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE])){
 	
@@ -216,6 +224,14 @@ function onAnimationFrame(frameTimestamp){
 		targetTarget[X] = analogCenter[X] + Math.cos(angle) * positionOut;
 		targetTarget[Y] = analogCenter[Y] + Math.sin(angle) * positionOut;
 	}*/
+	
+	// If we have a lower average score, save it!
+	if(eTargetPositionsX[maxPoints - 1] != 0)
+		if(minScore == null || minScore > score)
+			minScore = score;
+	
+	// Try playing more developer commentary if we have unlocked more
+	checkDeveloperCommentary();
 	
 	//////////////
 	//// DRAW ////
@@ -300,18 +316,28 @@ function onAnimationFrame(frameTimestamp){
 		count += Math.abs(eTargetPositionsX[e] - ePlayerPositionsX[e]);
 	}
 	
-	var average = count / maxPoints;
-	var displayRating = ((Math.round(average * 100)) / 100);
+	score = count / maxPoints;
 	
-	var decimal = String(displayRating).split('.');
+	var html = '<strong>IMPERFECTION RATING</strong><br>' + padDecimal(score);
 	
-	//console.log(decimal);
+	if(minScore != null)
+		html += '<br><strong>MIN SCORE</strong><br>' + padDecimal(minScore);
+	else
+		html += '<br><br><br>';
 	
-	displayRating = decimal[0].padStart(3,'0') + '.' + (decimal.length == 1 ? '0' : decimal[1]).padEnd(2,'0');
-	MEASURE.innerHTML = '<strong>IMPERFECTION RATING</strong><br>' + displayRating;
+	MEASURE.innerHTML = html;
 	
 	lastFrameTimestamp = frameTimestamp;
 	window.requestAnimationFrame(onAnimationFrame);
+}
+
+function padDecimal(value){
+	value = ((Math.round(value * 100)) / 100);
+	
+	var decimal = String(value).split('.');
+	var display = decimal[0].padStart(3,'0') + '.' + (decimal.length == 1 ? '0' : decimal[1]).padEnd(2,'0');
+	
+	return display;
 }
 
 /*function floatFormat(number){
@@ -414,7 +440,51 @@ B.addEventListener('input',function(){setColor();});
 
 COMMENTARYVOLUME.addEventListener('input',function(event){
 	COMMENTARYEL.volume = COMMENTARYVOLUME.value;
+	
+	// If we've set the volume to 0, pause the commentary
+	if(COMMENTARYVOLUME.value == 0)
+		COMMENTARYEL.pause();
+	// If we've surpassed it, play it
+	else
+		checkDeveloperCommentary();
 });
+
+COMMENTARYEL.addEventListener('ended',function(event){
+	playedThrough = true;
+});
+
+// Start commentary max distance at 60 seconds in, since that's how long a starting round is
+var commentaryMaxDistance = 60;
+var minScore = null;
+var playedThrough = false;
+function checkDeveloperCommentary(){
+	if(COMMENTARYVOLUME.value == 0)
+		return;
+	
+	if(minScore == null)
+		return;
+	
+	if(playedThrough)
+		return;
+	
+	// If we have a higher average score, play more commentary!
+	if(eTargetPositionsX[maxPoints - 1] != 0)
+	{
+		var newDistance = COMMENTARYEL.duration * (1 - (minScore / 50));
+
+		if(newDistance > commentaryMaxDistance)
+			commentaryMaxDistance = newDistance;
+	}
+	
+	// If we've gone further than score threshold, increase the commentary max distance
+	
+	if(COMMENTARYEL.currentTime <= commentaryMaxDistance)
+		COMMENTARYEL.play();
+	else
+		COMMENTARYEL.pause();
+}
+
+
 
 ///////////////////////
 //////// START ////////

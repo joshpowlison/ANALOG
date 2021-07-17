@@ -1,8 +1,8 @@
 <?php
 
 // This file runs when we're in localhost
-if($_SERVER['REMOTE_ADDR'] == '::1'){
-
+if($_SERVER['REMOTE_ADDR'] == '::1')
+{
 	exec('clang --target=wasm32 -Os -flto -nostdlib -std=c99 -Wl,--no-entry -Wl,--export-all -fno-builtin -o script.wasm script.c 2>&1',$message);
 }
 
@@ -67,23 +67,6 @@ if($_SERVER['REMOTE_ADDR'] == '::1'){
 		</div>
 	</div>
 	
-	<script>
-	// Commentary files
-		const COMMENTARY		= [<?php
-			// Read all of the commentary file names from the folder; add them into here
-			
-			$files = scandir('commentary');
-			
-			for($i = 0, $l = count($files); $i < $l; $i ++){
-				if(intval($files[$i]) === 0) continue;
-				
-				echo intval($files[$i]);
-				
-				// Exit out so we don't echo a comma
-				if(intval($files[$i]) !== 999999999) echo ',';
-			}
-		?>];
-	</script>
 	<script src="script.js?t=<?php echo filemtime('script.js'); ?>"></script>
 	<script>console.log(<?php echo json_encode($message); ?>);</script>
 </body>
