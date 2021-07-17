@@ -1,22 +1,7 @@
 TO DO:
-	- Make dots and such actually draw a line
-	- Make player and target dots have depth, so they layer over each other
 	- Record developer commentary
 
-NEXT STEPS:
-	- Make draw lines
-	- Make lines cross each other
-
 - Switch between mouse and gamepad (click mouse or press gamepad button to swap)
-
-POST ABOUT: made analog stick work with analog stick
-- Put up on website page
-It's on GitHub: https://github.com/joshpowlison/ANALOG
-
-
-
-
-
 
 
 
@@ -56,7 +41,7 @@ By June 30th:
 X	- Start streaming development
 X	- Make the analog stick color adjustable
 X	- Remove the paywall
-	- Pay a pro artist $100 USD to create the ANALOG stick graphics (deadline for art July 17th 12 PM EST)
+X	- Pay a pro artist $100 USD to create the ANALOG stick graphics (deadline for art July 17th 12 PM EST)
 
 By mid-July:
 	- Create ANALOG stick stickers (2 stickers, one for the top and one for the bottom)

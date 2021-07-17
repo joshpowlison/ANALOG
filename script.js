@@ -178,9 +178,9 @@ function onAnimationFrame(frameTimestamp){
 	distanceFromAnalogCenter = getDistance(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]);
 	
 	// Read cursor position, if it's set
-	if(analogStickPosition != null && distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE]){
+	if(gamepadPosition != null || (analogStickPosition != null && distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE])){
 	
-		WASM.loop(sDeltaTime, analogStickPosition[X], analogStickPosition[Y], distanceFromAnalogCenter);
+		WASM.processMovement(sDeltaTime, analogStickPosition[X], analogStickPosition[Y]);
 		
 		// I WANT THIS IN JS
 		//var distance = Math.sqrt(a * a + b * b);  // TODO: get square root or fake it!
@@ -193,7 +193,11 @@ function onAnimationFrame(frameTimestamp){
 		// Ripped from: https://stackoverflow.com/questions/15653801/rotating-object-to-face-mouse-pointer-on-mousemove
 		var columnAngle = Math.atan2(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
 		
-		columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / settings[SETTING_ANALOG_RADIUS] * .7) + ') translate(0%, ' + (distanceFromAnalogCenter / settings[SETTING_ANALOG_RADIUS] * 85) + '%)';
+		var translateY = (distanceFromAnalogCenter / settings[SETTING_ANALOG_RADIUS] * 85);
+		if(translateY > settings[SETTING_ANALOG_RADIUS] * 1.15)
+			translateY = settings[SETTING_ANALOG_RADIUS] * 1.15;
+		
+		columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / settings[SETTING_ANALOG_RADIUS] * .7) + ') translate(0%, ' + translateY + '%)';
 		
 		// If we are not doing anything with the ANALOG stick, then move it to base position
 	}
@@ -202,6 +206,8 @@ function onAnimationFrame(frameTimestamp){
 		buttonTransform = 'rotate3d(0,0,0,0deg) translate(0px,0px) scale(1)';
 		columnTransform = 'rotate(0deg) scale(1,1) translate(0%,0%)';
 	}
+	
+	WASM.updatePoints(sDeltaTime, analogStickPosition[X], analogStickPosition[Y]);
 	
 	// Update styles
 	BUTTON.style.transform = buttonTransform;
@@ -301,7 +307,14 @@ function onAnimationFrame(frameTimestamp){
 	}
 	
 	var average = count / maxPoints;
-	//MEASURE.innerHTML = 'IMPERFECTION RATING:<br>' + ((Math.round(average * 100)) / 100);
+	var displayRating = ((Math.round(average * 100)) / 100);
+	
+	var decimal = String(displayRating).split('.');
+	
+	//console.log(decimal);
+	
+	displayRating = decimal[0].padStart(3,'0') + '.' + (decimal.length == 1 ? '0' : decimal[1]).padEnd(2,'0');
+	MEASURE.innerHTML = '<strong>IMPERFECTION RATING</strong><br>' + displayRating;
 	
 	lastFrameTimestamp = frameTimestamp;
 	window.requestAnimationFrame(onAnimationFrame);

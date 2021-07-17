@@ -44,38 +44,31 @@ float analogCenter[2];
 ////// LIBRARIES //////
 ///////////////////////
 
-void loop(float sDeltaTime, float analogStickPositionX, float analogStickPositionY, float distanceFromAnalogCenter)
+void processMovement(float sDeltaTime, float analogStickPositionX, float analogStickPositionY)
 {
 	float analogStickPosition[2] = {analogStickPositionX, analogStickPositionY};
 	
+	// If the button is being targeted at all by the movement, angle it
+	// Set button rotation angle
+	// rotate3d(rotate left, rotate up, LEAVE 0, strongest amount)
+	float xAngle = (analogStickPosition[X] - analogCenter[X]) / settings[SETTING_ANALOG_RADIUS];
+	float yAngle = (analogStickPosition[Y] - analogCenter[Y]) / settings[SETTING_ANALOG_RADIUS] * -1;
+	
+	// Distance
+	float a = analogStickPosition[X] - analogCenter[X];
+	float b = analogStickPosition[Y] - analogCenter[Y];
+	
+	settings[SETTING_X_ANGLE] = xAngle;
+	settings[SETTING_Y_ANGLE] = yAngle;
+	
+	settings[SETTING_DISTANCE] = getSquareRoot(a * a + b * b);
+}
+
+void updatePoints(float sDeltaTime, float analogStickPositionX, float analogStickPositionY)
+{
 	rng();
 	
-	int gamepadExists = 0;
-	//float distanceFromAnalogCenter = settings[SETTING_ANALOG_READ_DISTANCE] + 1;
-	float distanceFromTarget = distanceFromAnalogCenter;
-	
-	// If the button is being targeted at all by the movement, angle it
-	if(gamepadExists == 1 || distanceFromAnalogCenter <= settings[SETTING_ANALOG_READ_DISTANCE])
-	{
-		// Set button rotation angle
-		// rotate3d(rotate left, rotate up, LEAVE 0, strongest amount)
-		float xAngle = (analogStickPosition[X] - analogCenter[X]) / settings[SETTING_ANALOG_RADIUS];
-		float yAngle = (analogStickPosition[Y] - analogCenter[Y]) / settings[SETTING_ANALOG_RADIUS] * -1;
-		
-		// Distance
-		float a = analogStickPosition[X] - analogCenter[X];
-		float b = analogStickPosition[Y] - analogCenter[Y];
-		
-		settings[SETTING_X_ANGLE] = xAngle;
-		settings[SETTING_Y_ANGLE] = yAngle;
-		
-		settings[SETTING_DISTANCE] = getSquareRoot(a * a + b * b);
-		
-		// Update info
-		distanceFromTarget = getDistance(analogStickPosition[X] - target[X], analogStickPosition[Y] - target[Y]);
-		
-		settings[SETTING_DISTANCE_FROM_TARGET] = distanceFromTarget;
-	}
+	float analogStickPosition[2] = {analogStickPositionX, analogStickPositionY};
 	
 	if(getDistance(target[X] - targetTarget[X], target[Y] - targetTarget[Y]) < 3){
 	// https://stackoverflow.com/questions/12959237/get-point-coordinates-based-on-direction-and-distance-vector

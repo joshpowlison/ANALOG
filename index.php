@@ -43,7 +43,8 @@ if($_SERVER['REMOTE_ADDR'] == '::1'){
 			<p>Commentary Volume <input id="commentary" type="range" min="0" max="1" step=".1" value="0"></p>
 			
 			<p>Creator: Josh Powlison</p>
-			<p>Co-Producers: None yet!</p>
+			<p>Producers: AkiAndPeach, Shirra, Orange, Cowmash, No response, Jnoodle Games</p>
+			<p>Co-Producers: JL, JN,  MC, DH, RS, ΚΨ, CB</p>
 			
 			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself">Funded with Kickstarter</a></p>
 			<p><a target="_blank" href="https://joshpowlison.com/">My Website</a></p>
