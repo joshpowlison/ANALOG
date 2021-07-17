@@ -12,7 +12,7 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 <html>
 <head>
 	<title>ANALOG</title>
-	<link rel="stylesheet" type="text/css" href="styles.css">
+	<link rel="stylesheet" type="text/css" href="styles.css?t=<?php echo filemtime('styles.css'); ?>">
 	
 	<meta name="description" content="Fail to be perfect."><!-- 155-160 char max -->
 	<meta charset="utf-8">
