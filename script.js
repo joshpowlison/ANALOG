@@ -104,7 +104,7 @@ function getDistance(a,b){
 var buttonTransform = 'rotate3d(0,0,0,0deg) translate(0px,0px) scale(1)';
 var columnTransform = 'rotate(0deg) scale(1,1) translate(0%,0%)';
 var distanceFromTarget = 0;
-var pressPosition = null;
+var pressPosition = [0,0];
 
 // On moving a pointer
 function move(event){
@@ -207,6 +207,7 @@ function onAnimationFrame(frameTimestamp){
 	BUTTON.style.transform = buttonTransform;
 	COLUMN.style.transform = columnTransform;
 	
+	// More precise to move within full circle
 	// Update targetTarget if it's moved too close
 	/*while(getDistance(target[X] - targetTarget[X], target[Y] - targetTarget[Y]) < 3){
 	// https://stackoverflow.com/questions/12959237/get-point-coordinates-based-on-direction-and-distance-vector
@@ -230,8 +231,8 @@ function onAnimationFrame(frameTimestamp){
 			// Draw the target and current player position on the canvas
 			CTX.beginPath();
 			CTX.arc(
-				eTargetPositionsX[e]
-				,eTargetPositionsY[e]
+				eTargetPositionsX[e] - analogCenter[X] + (CANVAS.width / 2)
+				,eTargetPositionsY[e] - analogCenter[Y] + (CANVAS.height / 2)
 				,CANVAS.width / 75
 				,0
 				,2 * Math.PI
@@ -259,8 +260,8 @@ function onAnimationFrame(frameTimestamp){
 			// Draw the target and current player position on the canvas
 			CTX.beginPath();
 			CTX.arc(
-				ePlayerPositionsX[e]
-				,ePlayerPositionsY[e]
+				ePlayerPositionsX[e] - analogCenter[X] + (CANVAS.width / 2)
+				,ePlayerPositionsY[e] - analogCenter[Y] + (CANVAS.height / 2)
 				,CANVAS.width / 75
 				,0
 				,2 * Math.PI
