@@ -54,10 +54,10 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 			<p>Josh Powlison</p>
 			
 			<h3>Producers</h3>
-			<p>AkiAndPeach, Shirra, Orange, Cowmash, No response, Jnoodle Games</p>
+			<p>Shirra, Orange, AkiAndPeach, Cowmash, No response, Jnoodle Games</p>
 			
 			<h3>Co-Producers</h3>
-			<p>JL, JN,  MC, DH, RS, ΚΨ, CB</p>
+			<p>JL, JN, MC, DH, RS, ΚΨ, CB</p>
 			
 			<hr>
 			
