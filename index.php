@@ -36,20 +36,33 @@ if($_SERVER['REMOTE_ADDR'] == '::1'){
 	
 	<div id="menu-container">
 		<div id="menu" style="display:none;">
+			<img id="logo" src="assets/logo-tagline.png">
+		
+			<h2>Settings</h2>
+			<h3>Analog Stick Color</h3>
 			<input id="r" type="range" min="0" max="255" step="1" value="200">
 			<input id="g" type="range" min="0" max="255" step="1" value="200">
 			<input id="b" type="range" min="0" max="255" step="1" value="200">
 			
-			<p>Commentary Volume <input id="commentary" type="range" min="0" max="1" step=".1" value="0"></p>
+			<h3>Developer Commentary Volume</h3>
+			<p><input id="commentary" type="range" min="0" max="1" step=".1" value="0"></p>
 			
-			<p>Creator: Josh Powlison</p>
-			<p>Producers: AkiAndPeach, Shirra, Orange, Cowmash, No response, Jnoodle Games</p>
-			<p>Co-Producers: JL, JN,  MC, DH, RS, ΚΨ, CB</p>
+			<hr>
 			
-			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself">Funded with Kickstarter</a></p>
-			<p><a target="_blank" href="https://joshpowlison.com/">My Website</a></p>
+			<h2>Credits</h2>
+			<h3>Creator/Coder/Story</h3>
+			<p>Josh Powlison</p>
 			
-			<p><em>V 1.0.0 i guess</em></p>
+			<h3>Producers</h3>
+			<p>AkiAndPeach, Shirra, Orange, Cowmash, No response, Jnoodle Games</p>
+			
+			<h3>Co-Producers</h3>
+			<p>JL, JN,  MC, DH, RS, ΚΨ, CB</p>
+			
+			<hr>
+			
+			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself">Funded with Kickstarter</a> | <a target="_blank" href="https://joshpowlison.com/">My Website</a></p>
+			
 			<button id="menu-close-button">Close Menu</button>
 		</div>
 	</div>

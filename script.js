@@ -182,14 +182,6 @@ function onAnimationFrame(frameTimestamp){
 	
 		WASM.processMovement(sDeltaTime, analogStickPosition[X], analogStickPosition[Y]);
 		
-		// I WANT THIS IN JS
-		//var distance = Math.sqrt(a * a + b * b);  // TODO: get square root or fake it!
-		
-		buttonTransform = 'rotate3d(' + settings[SETTING_Y_ANGLE] + ',' + settings[SETTING_X_ANGLE] + ',0,' + (settings[SETTING_DISTANCE] * .7) + 'deg)';
-		
-		//console.log(settings[SETTING_A], settings[SETTING_B],  analogStickPosition, analogCenter);
-		//console.log(settings);
-
 		// Ripped from: https://stackoverflow.com/questions/15653801/rotating-object-to-face-mouse-pointer-on-mousemove
 		var columnAngle = Math.atan2(analogStickPosition[X] - analogCenter[X], analogStickPosition[Y] - analogCenter[Y]) * (180 / Math.PI);
 		
@@ -197,6 +189,8 @@ function onAnimationFrame(frameTimestamp){
 		if(translateY > settings[SETTING_ANALOG_RADIUS] * 1.15)
 			translateY = settings[SETTING_ANALOG_RADIUS] * 1.15;
 		
+		// Move items in "3D space"
+		buttonTransform = 'rotate3d(' + settings[SETTING_Y_ANGLE] + ',' + settings[SETTING_X_ANGLE] + ',0,' + (settings[SETTING_DISTANCE] * .7) + 'deg)';
 		columnTransform = 'rotate(' + (-columnAngle) + 'deg) scale(1, ' + (distanceFromAnalogCenter / settings[SETTING_ANALOG_RADIUS] * .7) + ') translate(0%, ' + translateY + '%)';
 		
 		// If we are not doing anything with the ANALOG stick, then move it to base position
