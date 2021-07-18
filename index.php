@@ -59,6 +59,9 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 			<h3>Co-Producers</h3>
 			<p>JL, JN, MC, DH, RS, ΚΨ, CB</p>
 			
+			<h3>Analog Stick Artist</h3>
+			<p>Rachael Allen</p>
+			
 			<hr>
 			
 			<p><a target="_blank" href="https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself">Funded with Kickstarter</a> | <a target="_blank" href="https://joshpowlison.com/">My Website</a></p>
