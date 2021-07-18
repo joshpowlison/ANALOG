@@ -1,56 +1,16 @@
 TO DO:
 	- Record developer commentary
-
-- Switch between mouse and gamepad (click mouse or press gamepad button to swap)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-IDEAS:
-	SupremeCookie
-		- Scoring with images (like theme part, rubber ducky, etc)
-		- Rotate window when imperfect
-		- Screen shake
-		- Move the analog stick on-screen
-	Brandon
-		- Make outside of dot solid, but inside fades out?\
-	Stefon
-		- Colorblind mode(?)
-		- Playing with different hand modes
-		- Text on different scores
-
-	
+	- Update analog stick center when text is first updated, so it can't mess things up
 
 ////////////
 ////////////
 ////////////
 
-// ANALOG Tasks //
-
-By June 30th:
-X	- Start streaming development
-X	- Make the analog stick color adjustable
-X	- Remove the paywall
-X	- Pay a pro artist $100 USD to create the ANALOG stick graphics (deadline for art July 17th 12 PM EST)
-
-By mid-July:
+By August 14:
 	- Create ANALOG stick stickers (2 stickers, one for the top and one for the bottom)
-	- Get at least 11 envelopes
 	- Record developer commentary and add it in to the game
-	- Make the game public on GitHub
 	- Record developer interviews
 	- Create an epic poem and read it on-stream
-	- Record a video where I shout out every producer
 
 By August 31:
 	- Ship backer rewards

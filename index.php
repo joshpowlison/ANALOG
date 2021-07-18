@@ -51,7 +51,7 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 			
 			<h2>Credits</h2>
 			<h3>Creator/Coder/Story</h3>
-			<p>Josh Powlison</p>
+			<p><a target="_blank" href="https://joshpowlison.com/">Josh Powlison</a></p>
 			
 			<h3>Producers</h3>
 			<p>Shirra, Orange, AkiAndPeach, Cowmash, No response, Jnoodle Games</p>
@@ -60,7 +60,7 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 			<p>JL, JN, MC, DH, RS, ΚΨ, CB</p>
 			
 			<h3>Analog Stick Artist</h3>
-			<p>Rachael Allen</p>
+			<p><a href="https://instagram.com/pip400art" target="_blank">Rachael Allen</a></p>
 			
 			<hr>
 			
