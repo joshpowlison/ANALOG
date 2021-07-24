@@ -157,7 +157,6 @@ function move(event){
 	// Set pressPosition to the center if we're far off it (the center)
 	var distanceFromAnalogCenter = getDistance(pressPosition[X] - analogCenter[X], pressPosition[Y] - analogCenter[Y]);
 	
-	console.log(event);
 	// If the cursor is not in position, set the pressing position to nothing!
 	if(settings == null
 		|| (event.type == 'touchend' && !event.touches)
