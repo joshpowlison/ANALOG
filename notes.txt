@@ -1,20 +1,24 @@
+https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself/posts/3249658
+
 TO DO:
-	- Record developer commentary
-	- Update analog stick center when text is first updated, so it can't mess things up
+	- Make sizing work when screen is small
+		- Test on mobile and with touch screen (get small laptop)
+X	- Fix analog stick position adjusting wrong on page start
+	- Officially release ANALOG, ask for feedback
+	- Record epic poem reading on-stream
 
 ////////////
 ////////////
 ////////////
 
 By August 14:
-	- Create ANALOG stick stickers (2 stickers, one for the top and one for the bottom)
-	- Record developer commentary and add it in to the game
-	- Record developer interviews
 	- Create an epic poem and read it on-stream
 
 By August 31:
 	- Ship backer rewards
 		- Write hand-lettered ANALOG haikus for high-level backers (wait for them to submit surveys so that I can use their favorite color for the ink)
 		- Ship stickers
+		- See if I can use Thomas's printer and just give him a few bucks for printing
+		- Ship ANALOG stick stickers to artist as well
 
 ** Finish game by September 30th **

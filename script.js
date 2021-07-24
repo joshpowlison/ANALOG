@@ -30,6 +30,7 @@ COMMENTARYEL.autoplay	= true;
 COMMENTARYEL.volume		= COMMENTARYVOLUME.value
 COMMENTARYEL.src		= 'assets/commentary.mp3';
 
+// C99 Constants
 const SETTING_ANALOG_READ_DISTANCE	= 0;
 const SETTING_ANALOG_RADIUS			= 1;
 const SETTING_X_ANGLE				= 2;
@@ -39,17 +40,32 @@ const SETTING_DISTANCE				= 5;
 const SETTING_A						= 6;
 const SETTING_B						= 7;
 
+const SCORE_COMMENTARY_START		= 50;
+
 ///////////////////////
 ////// VARIABLES //////
 ///////////////////////
 
-var analogCenter		= [0, 0];
-var pressPosition		= [0, 0];
-var target				= [0, 0];
-var targetTarget		= [0, 0];
-var settings			= null;
-var score				= 0;
+var analogCenter			= [0, 0];
+var pressPosition			= [0, 0];
+var target					= [0, 0];
+var targetTarget			= [0, 0];
+var settings				= null;
+var score					= 0;
+var gamepadDefaultPosition	= [0,0];
+var lastFrameTimestamp		= 0;
+var gamepadInput			= false;
+var commentaryMaxDistance	= 60;
+var minScore				= null;
+var playedThrough			= false;
 
+// WASM Values
+var WASM					= null;
+var ePlayerPositionsX		= null;
+var ePlayerPositionsY		= null;
+var eTargetPositionsX		= null;
+var eTargetPositionsY		= null;
+var maxPoints				= 1024;
 
 ///////////////////////
 ////// FUNCTIONS //////
@@ -120,13 +136,18 @@ function move(event){
 		// Get all the touches on the button and add them to the list
 		for(var i = 0; i < event.touches.length; i ++){
 			// Add the touch to the touchPoints list if it's on the button
-			if(getDistance(event.touches[i].clientX - analogCenter[X], event.touches[i].clientY - analogCenter[Y]) <= settings[SETTING_ANALOG_RADIUS]) touchPoints.push([event.touches[i].clientX,event.touches[i].clientY]);
+			if(getDistance(event.touches[i].clientX - analogCenter[X], event.touches[i].clientY - analogCenter[Y]) <= settings[SETTING_ANALOG_READ_DISTANCE])
+				touchPoints.push([event.touches[i].clientX,event.touches[i].clientY]);
 		}
 		
 		// Get the centroid of the polygon- which, um, may be glitchy, but we'll see!
 		if(touchPoints.length == 1)			pressPosition = touchPoints[0];
 		else if(touchPoints.length == 2)	pressPosition = getMidpoint(touchPoints);
 		else if(touchPoints.length > 2)		pressPosition = getPolygonCentroid(touchPoints);
+		
+		// If we're touching the analog stick, then don't scroll
+		if(touchPoints.length > 0 && event.type == 'touchmove')
+			event.preventDefault();
 	}
 	// If it's clicking
 	else{
@@ -136,12 +157,14 @@ function move(event){
 	// Set pressPosition to the center if we're far off it (the center)
 	var distanceFromAnalogCenter = getDistance(pressPosition[X] - analogCenter[X], pressPosition[Y] - analogCenter[Y]);
 	
-	// Read cursor position, if it's set
-	if(settings == null || distanceFromAnalogCenter > settings[SETTING_ANALOG_READ_DISTANCE])
+	console.log(event);
+	// If the cursor is not in position, set the pressing position to nothing!
+	if(settings == null
+		|| (event.type == 'touchend' && !event.touches)
+		|| distanceFromAnalogCenter > settings[SETTING_ANALOG_READ_DISTANCE]
+	)
 		pressPosition = analogCenter;
 }
-
-var gamepadDefaultPosition = [0,0];
 
 function getGamepadAxes(){
 	var deadzone = 0;
@@ -164,7 +187,6 @@ function SetRange(value, min, max){
 	return value;
 }
 
-var lastFrameTimestamp	= 0;
 function onAnimationFrame(frameTimestamp){
 	var sDeltaTime = (frameTimestamp - lastFrameTimestamp) / 1000;
 
@@ -318,12 +340,7 @@ function onAnimationFrame(frameTimestamp){
 	
 	score = count / maxPoints;
 	
-	var html = '<strong>IMPERFECTION RATING</strong><br>' + padDecimal(score);
-	
-	if(minScore != null)
-		html += '<br><strong>MIN SCORE</strong><br>' + padDecimal(minScore);
-	else
-		html += '<br><br><br>';
+	var html = '<strong>IMPERFECTION RATING</strong><br>' + padDecimal(score) + '<br><strong>MIN SCORE</strong><br>' + ((minScore != null) ? padDecimal(minScore) : 'Will score once trail is longer...');
 	
 	MEASURE.innerHTML = html;
 	
@@ -339,13 +356,6 @@ function padDecimal(value){
 	
 	return display;
 }
-
-/*function floatFormat(number){
-	number
-}*/
-
-// Check for gamepad input
-var gamepadInput = false;
 
 setInterval(function(){
 	// Get the first gamepad, if gamepads are connected
@@ -415,13 +425,29 @@ function setColor(passedColor = null){
 	});
 }
 
-document.getElementById('menu-button').addEventListener('click',function(){
-	document.getElementById('menu').style.display = (document.getElementById('menu').style.display === 'block') ? 'none' : 'block';
-});
-
-document.getElementById('menu-close-button').addEventListener('click',function(){
-	document.getElementById('menu').style.display = 'none';
-});
+function checkDeveloperCommentary(){
+	if(COMMENTARYVOLUME.value == 0)
+		return;
+	
+	if(playedThrough)
+		return;
+	
+	var newDistance = 0;
+	
+	// If we have a higher average score, play more commentary!
+	if(minScore != null)
+		newDistance = COMMENTARYEL.duration * (1 - (minScore / SCORE_COMMENTARY_START));
+	
+	if(newDistance > commentaryMaxDistance)
+		commentaryMaxDistance = newDistance;
+	
+	// If we've gone further than score threshold, increase the commentary max distance
+	
+	if(COMMENTARYEL.currentTime <= commentaryMaxDistance)
+		COMMENTARYEL.play();
+	else
+		COMMENTARYEL.pause();
+}
 
 ///////////////////////
 /// EVENT LISTENERS ///
@@ -431,12 +457,22 @@ document.getElementById('menu-close-button').addEventListener('click',function()
 window.addEventListener('resize',getCenter);
 
 window.addEventListener('mousemove',move);
+window.addEventListener('touchstart',move);
+window.addEventListener('touchend',move);
 window.addEventListener('touchmove',move,{passive:false});
 
 // Colors
 R.addEventListener('input',function(){setColor();});
 G.addEventListener('input',function(){setColor();});
 B.addEventListener('input',function(){setColor();});
+
+document.getElementById('menu-button').addEventListener('click',function(){
+	document.getElementById('menu').style.display = (document.getElementById('menu').style.display === 'block') ? 'none' : 'block';
+});
+
+document.getElementById('menu-close-button').addEventListener('click',function(){
+	document.getElementById('menu').style.display = 'none';
+});
 
 COMMENTARYVOLUME.addEventListener('input',function(event){
 	COMMENTARYEL.volume = COMMENTARYVOLUME.value;
@@ -453,51 +489,9 @@ COMMENTARYEL.addEventListener('ended',function(event){
 	playedThrough = true;
 });
 
-// Start commentary max distance at 60 seconds in, since that's how long a starting round is
-var commentaryMaxDistance = 60;
-var minScore = null;
-var playedThrough = false;
-function checkDeveloperCommentary(){
-	if(COMMENTARYVOLUME.value == 0)
-		return;
-	
-	if(minScore == null)
-		return;
-	
-	if(playedThrough)
-		return;
-	
-	// If we have a higher average score, play more commentary!
-	if(eTargetPositionsX[maxPoints - 1] != 0)
-	{
-		var newDistance = COMMENTARYEL.duration * (1 - (minScore / 50));
-
-		if(newDistance > commentaryMaxDistance)
-			commentaryMaxDistance = newDistance;
-	}
-	
-	// If we've gone further than score threshold, increase the commentary max distance
-	
-	if(COMMENTARYEL.currentTime <= commentaryMaxDistance)
-		COMMENTARYEL.play();
-	else
-		COMMENTARYEL.pause();
-}
-
-
-
 ///////////////////////
 //////// START ////////
 ///////////////////////
-
-var WASM = null;
-var ePlayerPositionsX = null;
-var ePlayerPositionsY = null;
-var eTargetPositionsX = null;
-var eTargetPositionsY = null;
-var maxPoints = 1024;
-
-//obj.instance.exports.loop((frameTimestamp - lastFrameTimestamp) / 1000);
 
 (function(){
 	setColor();

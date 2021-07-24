@@ -24,7 +24,12 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 <body>
 	<canvas id="canvas" height="100" width="100"></canvas>
 	
-	<p id="measure">0</p>
+	<p id="measure">
+		<strong>IMPERFECTION RATING</strong>
+		<br>000.00
+		<br><strong>MIN SCORE</strong>
+		<br>Will calculate once trail is longer...
+	</p>
 	
 	<div id="button-holder">
 		<div id="button"><div id="button-coloration"></div></div>
@@ -45,6 +50,7 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 			<input id="b" type="range" min="0" max="255" step="1" value="200">
 			
 			<h3>Developer Commentary Volume</h3>
+			<p>More commentary unlocks with a lower Min Score.</p>
 			<p><input id="commentary" type="range" min="0" max="1" step=".1" value="0"></p>
 			
 			<hr>
