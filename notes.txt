@@ -1,22 +1,11 @@
 https://www.kickstarter.com/projects/joshuapowlison/analog-a-heartfelt-metaphor-about-living-with-yourself/posts/3249658
 
 TO DO:
-	- Make sizing work when screen is small
-		- Test on mobile and with touch screen (get small laptop)
-X	- Fix analog stick position adjusting wrong on page start
-	- Officially release ANALOG, ask for feedback
-	- Record epic poem reading on-stream
-
-////////////
-////////////
-////////////
-
-By August 14:
-	- Create an epic poem and read it on-stream
+	- Get Twitch stream downloaded and cut out Epic Poem
+	- Post Epic Poem privately on YouTube and share on Kickstarter
 
 By August 31:
 	- Ship backer rewards
-		- Write hand-lettered ANALOG haikus for high-level backers (wait for them to submit surveys so that I can use their favorite color for the ink)
 		- Ship stickers
 		- See if I can use Thomas's printer and just give him a few bucks for printing
 		- Ship ANALOG stick stickers to artist as well
