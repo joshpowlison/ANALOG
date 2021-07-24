@@ -431,6 +431,8 @@ function checkDeveloperCommentary(){
 	if(playedThrough)
 		return;
 	
+	getSoundWorkingOnIOS();
+	
 	var newDistance = 0;
 	
 	// If we have a higher average score, play more commentary!
@@ -446,6 +448,26 @@ function checkDeveloperCommentary(){
 		COMMENTARYEL.play();
 	else
 		COMMENTARYEL.pause();
+}
+
+// Pulled from: https://paulbakaus.com/tutorials/html5/web-audio-on-ios/
+function getSoundWorkingOnIOS()
+{
+	var myContext = new AudioContext();
+	
+	// create empty buffer
+	var buffer = myContext.createBuffer(1, 1, 22050);
+	var source = myContext.createBufferSource();
+	source.buffer = buffer;
+
+	// connect to output (your speakers)
+	source.connect(myContext.destination);
+
+	// play the file
+	if(typeof(source.noteOn) == 'undefined')
+		source.start(0);
+	else
+		source.noteOn(0);
 }
 
 ///////////////////////
