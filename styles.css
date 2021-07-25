@@ -74,8 +74,9 @@ body{
 	transition:transform .02s, box-shadow .02s;
 	box-shadow:0 0 10em rgba(0,0,0,0) inset, 0.1em 0.1em 0.2em 0.15em rgba(0,0,0,.5);
 	
-	background:url("assets/knob.png");
-	background-size:contain;
+	background-image:url("assets/knob.png");
+	background-size:cover;
+	background-position:center;
 }
 
 #button-coloration{
@@ -84,6 +85,10 @@ body{
 	height:100%;
 	border-radius:50%;
 	mix-blend-mode:multiply;
+}
+
+#image-top{
+	width:70%;
 }
 
 #column{

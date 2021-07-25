@@ -487,6 +487,10 @@ R.addEventListener('input',function(){setColor();});
 G.addEventListener('input',function(){setColor();});
 B.addEventListener('input',function(){setColor();});
 
+document.getElementById('image-top').addEventListener('change',function(){
+	BUTTON.style.backgroundImage = !this.value ? null : 'url(' + this.value + ')';
+});
+
 document.getElementById('menu-button').addEventListener('click',function(){
 	document.getElementById('menu').style.display = (document.getElementById('menu').style.display === 'block') ? 'none' : 'block';
 });

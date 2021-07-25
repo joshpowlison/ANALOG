@@ -45,9 +45,12 @@ if($_SERVER['REMOTE_ADDR'] == '::1')
 		
 			<h2>Settings</h2>
 			<h3>Analog Stick Color</h3>
-			<input id="r" type="range" min="0" max="255" step="1" value="200">
-			<input id="g" type="range" min="0" max="255" step="1" value="200">
-			<input id="b" type="range" min="0" max="255" step="1" value="200">
+			<input id="r" type="range" min="0" max="255" step="1" value="255">
+			<input id="g" type="range" min="0" max="255" step="1" value="255">
+			<input id="b" type="range" min="0" max="255" step="1" value="255">
+			
+			<h3>Analog Stick Graphic</h3>
+			<input type="text" id="image-top" placeholder="Empty for default, or image link">
 			
 			<h3>Developer Commentary Volume</h3>
 			<p>More commentary unlocks with a lower Min Score.</p>
